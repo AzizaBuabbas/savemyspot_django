@@ -1,82 +1,82 @@
 from rest_framework import serializers
 
 from .models import (
-	Restaurant,
-	Day,
-	OperatingTime,
-	Category,
-	Item,
-	Queue,
-	RestaurantUser
+    Restaurant,
+    Day,
+    OperatingTime,
+    Category,
+    Item,
+    Queue,
+    RestaurantUser
 )
 
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = User
-		fields = ['id', 'first_name', 'last_name']
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name']
 
 
 class OperatingTimeListSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = OperatingTime
-		fields = '__all__'
+    class Meta:
+        model = OperatingTime
+        fields = '__all__'
 
 
 class RestaurantListSerializer(serializers.ModelSerializer):
-	operatingtime = OperatingTimeListSerializer(many = True)
-	queue = serializers.SerializerMethodField()
-	class Meta:
-		model = Restaurant
-		fields = '__all__'
+    operatingtime = OperatingTimeListSerializer(many = True)
+    queue = serializers.SerializerMethodField()
+    class Meta:
+        model = Restaurant
+        fields = '__all__'
 
-	def get_queue(self, obj):
-		return obj.queue.count() 
+    def get_queue(self, obj):
+        return obj.queue.count() 
 
 class QueueListSerializer(serializers.ModelSerializer):
-	restaurant = RestaurantListSerializer()
-	user = UserSerializer()
-	class Meta:
-		model = Queue
-		fields = '__all__'
+    restaurant = RestaurantListSerializer()
+    user = UserSerializer()
+    class Meta:
+        model = Queue
+        fields = '__all__'
 
 
 class ItemListSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Item
-		fields = '__all__'
+    class Meta:
+        model = Item
+        fields = '__all__'
 
 class CategoryListSerializer(serializers.ModelSerializer):
-	item = ItemListSerializer(many = True)
-	class Meta:
-		model = Category
-		fields = '__all__'
+    item = ItemListSerializer(many = True)
+    class Meta:
+        model = Category
+        fields = '__all__'
 
 
 class RestaurantDetailSerializer(serializers.ModelSerializer):
-	category = CategoryListSerializer(many = True)
-	queue = QueueListSerializer(many = True)
-	operatingtime = OperatingTimeListSerializer(many = True)
+    category = CategoryListSerializer(many = True)
+    queue = QueueListSerializer(many = True)
+    operatingtime = OperatingTimeListSerializer(many = True)
 
-	class Meta:
-		model = Restaurant
-		fields = '__all__'
+    class Meta:
+        model = Restaurant
+        fields = '__all__'
 
 
 class QueueCreateSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Queue
-		exclude = ['position',]
+    class Meta:
+        model = Queue
+        exclude = ['position',]
 
-	def create(self, validated_data):
-		restaurant = validated_data['restaurant']
-		user = validated_data['user']
-		enter_q = Queue(restaurant= restaurant, user = user)
-		enter_q.increment_position()
-		enter_q.save()
-		return validated_data
+    def create(self, validated_data):
+        restaurant = validated_data['restaurant']
+        user = validated_data['user']
+        enter_q = Queue(restaurant= restaurant, user = user)
+        enter_q.increment_position()
+        enter_q.save()
+        return validated_data
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -116,11 +116,11 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Incorrect username/password")
 
         try:
-        	restaurant_user = RestaurantUser.objects.get(user = user_obj)
-        	data['restaurant']= restaurant_user.id
+            restaurant_user = RestaurantUser.objects.get(user = user_obj)
+            data['restaurant']= restaurant_user.id
 
         except:
-        	pass
+            pass
 
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -132,5 +132,13 @@ class UserLoginSerializer(serializers.Serializer):
         data["token"] = token
 
         return data
+
+class QueueUserSerializer(serialzers.ModelSerializer):
+    restaurant = RestaurantDetailSerializer()
+    
+    class Meta:
+        model = Qeueu
+        fields = '__all__'
+
 
 
