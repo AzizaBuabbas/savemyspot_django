@@ -133,11 +133,11 @@ class UserLoginSerializer(serializers.Serializer):
 
         return data
 
-class QueueUserSerializer(serialzers.ModelSerializer):
+class QueueUserSerializer(serializers.ModelSerializer):
     restaurant = RestaurantDetailSerializer()
     
     class Meta:
-        model = Qeueu
+        model = Queue
         fields = '__all__'
 
 
