@@ -50,7 +50,7 @@ class QueueView(APIView):
     def get(self, request):
         obj = request.data
         restaurant = Restaurant.objects.get(id = obj['restaurant'])
-        queue = Queue.object.filter(restaurant= restuarant)
+        queue = Queue.objects.filter(restaurant= restaurant)
         
         return Response(QueueListSerializer(queue, many=True).data)
 
