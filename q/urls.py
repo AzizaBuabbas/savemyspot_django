@@ -22,6 +22,7 @@ from api.views import (
 	RestraurantListView,
 	RestaurauntDetailView,
 	QueueView,
+    QueueUserListView,
 	UserCreateAPIView,
 	UserLoginAPIView,
 
@@ -32,6 +33,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('restaurant/list/', RestraurantListView.as_view(), name= 'rest-list'),
 	path('queue/create/', QueueView.as_view(), name = 'queue-create'),
+    path('queue/list/', QueueView.as_view(), name = "queue-list"),
+    path('user/queue/' ,QueueUserListView.as_view(), name = 'user-queue'),
+    path('queue/delete/<int:queue_id>/', QueueView.as_view(), name = 'queue-delete'),
 	path('restaurant/detail/<int:restaurant_id>/', RestaurauntDetailView.as_view(), name = 'restaurant-detail'),
 	path('signup/', UserCreateAPIView.as_view(), name="signup"),
     path('signin/',UserLoginAPIView.as_view(), name="signin"),

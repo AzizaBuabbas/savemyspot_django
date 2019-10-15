@@ -117,7 +117,7 @@ class UserLoginSerializer(serializers.Serializer):
 
         try:
             restaurant_user = RestaurantUser.objects.get(user = user_obj)
-            data['restaurant']= restaurant_user.id
+            data['restaurant']= restaurant_user.restaurant.id
 
         except:
             pass
